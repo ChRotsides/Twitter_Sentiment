@@ -1,9 +1,12 @@
-let express = require('express');
-let app = express();
-let bodyParser=require('body-parser');
-let Twitter=require('twitter');
+const express = require('express');
+const app = express();
+const bodyParser=require('body-parser');
+const Twitter=require('twitter');
 app.use(express.static('web_page'));
-let server=app.listen(8080,()=>console.log('listening...'));
+const fs=require('fs');
+const server=app.listen(8080,()=>console.log('listening...'));
+let json_dict=require("C:/Users/Hampis/Desktop/Twitter Sentiment/word_dictionary.json");
+let Test_data=require("C:/Users/Hampis/Desktop/Twitter Sentiment/Test_data.json");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
@@ -17,90 +20,93 @@ app.get('/name',(req,res)=>{
     let full_data=[];
 
     let tweets=get_tweets(search_term,min_id)
-                                .then((tweets_,p2,p3)=>{
-                                let parsed=findText(tweets_);
-                                // full_data.push(({parsed:parsed,raw:tweets_}));
-                                full_data.push(parsed['strs']);
-                                min_id=parsed['smalest'];
-                                return this;
-                                //
-                                }).then(()=>get_tweets(search_term,min_id)
-                                .then((tweets_i,p2,p3)=>{
-                                    let parsed=findText(tweets_i);
-                                    // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                    full_data.push(parsed['strs']);
-                                    min_id=parsed['smalest'];
-                                    return this;
-                                    }))
-                                    .then(()=>get_tweets(search_term,min_id)
-                                    .then((tweets_i,p2,p3)=>{
-                                        let parsed=findText(tweets_i);
-                                        // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                        full_data.push(parsed['strs']);
-                                        min_id=parsed['smalest'];
-                                        return this;
-                                        }))
-                                        .then(()=>get_tweets(search_term,min_id)
-                                        .then((tweets_i,p2,p3)=>{
-                                            let parsed=findText(tweets_i);
-                                            // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                            full_data.push(parsed['strs']);
-                                            min_id=parsed['smalest'];
-                                            return this;
-                                            }))
-                                            .then(()=>get_tweets(search_term,min_id)
-                                            .then((tweets_i,p2,p3)=>{
-                                                let parsed=findText(tweets_i);
-                                                // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                                full_data.push(parsed['strs']);
-                                                min_id=parsed['smalest'];
-                                                return this;
-                                                }))
-                                                    .then(()=>get_tweets(search_term,min_id)
-                                                    .then((tweets_i,p2,p3)=>{
-                                                        let parsed=findText(tweets_i);
-                                                        // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                                        full_data.push(parsed['strs']);
-                                                        min_id=parsed['smalest'];
-                                                        return this;
-                                                        }))
-                                                        .then(()=>get_tweets(search_term,min_id)
-                                                        .then((tweets_i,p2,p3)=>{
-                                                            let parsed=findText(tweets_i);
-                                                            // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                                            full_data.push(parsed['strs']);
-                                                            min_id=parsed['smalest'];
-                                                            return this;
-                                                            }))
-                                                            .then(()=>get_tweets(search_term,min_id)
-                                                            .then((tweets_i,p2,p3)=>{
-                                                                let parsed=findText(tweets_i);
-                                                                // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                                                full_data.push(parsed['strs']);
-                                                                min_id=parsed['smalest'];
-                                                                return this;}))
-                                                                .then(()=>get_tweets(search_term,min_id)
-                                                                .then((tweets_i,p2,p3)=>{
-                                                                    let parsed=findText(tweets_i);
-                                                                    // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                                                    full_data.push(parsed['strs']);
-                                                                    min_id=parsed['smalest'];
-                                                                    return this;}))
-                                                                    .then(()=>get_tweets(search_term,min_id)
-                                                                    .then((tweets_i,p2,p3)=>{
-                                                                        let parsed=findText(tweets_i);
-                                                                        // full_data.push(({parsed:parsed,raw:tweets_i}));
-                                                                        full_data.push(parsed['strs']);
-                                                                        min_id=parsed['smalest'];
-                                                                        res.send(full_data)
-                                                                        return this;
-                                                                        })).catch(e=>{console.log(e)});
-
+    .then((tweets_,p2,p3)=>{
+    let parsed=findText(tweets_);
+    // full_data.push(({parsed:parsed,raw:tweets_}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;
+    //
+    })
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+        let parsed=findText(tweets_i);
+        // full_data.push(({parsed:parsed,raw:tweets_i}));
+        full_data.push(parsed['strs']);
+        min_id=parsed['smalest'];
+        return this;
+        }))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;
+    }))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;
+    }))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;
+    }))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;
+    }))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;
+    }))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;}))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    return this;}))
+    .then(()=>get_tweets(search_term,min_id)
+    .then((tweets_i,p2,p3)=>{
+    let parsed=findText(tweets_i);
+    // full_data.push(({parsed:parsed,raw:tweets_i}));
+    full_data.push(parsed['strs']);
+    min_id=parsed['smalest'];
+    let data=get_sentiment(full_data);
+    // res.send(full_data)
+    res.send({scores:data[0],comments:data[1]})
+    return this;
+    }))
+    .catch(e=>{console.log(e)});
     
 });
 
 function get_tweets(search_term,smalest=null){
-    let tweets_g;null
+
     let auth_data={
         consumer_key: process.env.TWITTER_CONSUMER_KEY,
         consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -137,4 +143,46 @@ function find_smallest(ids){
         }
     }
     return smalest;
+}
+
+
+function get_sentiment(full_data){
+
+    let scores={positive:[],negative:[],uncertainty:[]};
+    let comments={positive:[],negative:[],uncertainty:[]};
+
+    let flat_data=flatten(full_data);
+    for (let str of flat_data){
+        for(let word of json_dict['positive']){
+            if (str.toUpperCase().includes(word)){
+                scores.positive++;
+                comments.positive.push(str);
+            }
+        }
+        for(let word of json_dict['negative']){
+            if (str.toUpperCase().includes(word)){
+                scores.negative++;
+                comments.negative.push(str);
+            }
+        }
+        for(let word of json_dict['uncertainty']){
+            if (str.toUpperCase().includes(word)){
+                scores.uncertainty++;
+                comments.uncertainty.push(str);
+            }
+        }
+    }
+    return [scores,comments];
+}
+
+
+function flatten(arr){
+    let flatend=[];
+    for (let i=0; i<arr.length; i++){
+        for(let j=0; j<arr[i].length; j++){
+            flatend.push(arr[i][j]);
+        }
+    }
+
+    return flatend;
 }
