@@ -5,8 +5,8 @@ const Twitter=require('twitter');
 app.use(express.static('web_page'));
 const fs=require('fs');
 const server=app.listen(8080,()=>console.log('listening...'));
-let json_dict=require("C:/Users/Hampis/Desktop/Twitter Sentiment/word_dictionary.json");
-let Test_data=require("C:/Users/Hampis/Desktop/Twitter Sentiment/Test_data.json");
+let json_dict=require("C:/Users/sex19/Desktop/Twitter Sentiment/Twitter_Sentiment/word_dictionary.json");
+let Test_data=require("C:/Users/sex19/Desktop/Twitter Sentiment/Twitter_Sentiment/Test_data.json");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
@@ -96,13 +96,13 @@ app.get('/name',(req,res)=>{
     // full_data.push(({parsed:parsed,raw:tweets_i}));
     full_data.push(parsed['strs']);
     min_id=parsed['smalest'];
-    let data=get_sentiment(full_data);
+    let data=get_sentiment(search_term.toUpperCase(),full_data);
     // res.send(full_data)
     res.send({scores:data[0],comments:data[1]})
     return this;
     }))
     .catch(e=>{console.log(e)});
-    
+
 });
 
 function get_tweets(search_term,smalest=null){
@@ -146,29 +146,33 @@ function find_smallest(ids){
 }
 
 
-function get_sentiment(full_data){
+function get_sentiment(keywords,full_data){
 
     let scores={positive:[],negative:[],uncertainty:[]};
-    let comments={positive:[],negative:[],uncertainty:[]};
+    let comments={positive:{str:[],word:[]},negative:{str:[],word:[]},uncertainty:{str:[],word:[]}};
 
     let flat_data=flatten(full_data);
-    for (let str of flat_data){
+    for (let strr of flat_data){
         for(let word of json_dict['positive']){
+          let str=strr.toString();
             if (str.toUpperCase().includes(word)){
                 scores.positive++;
-                comments.positive.push(str);
+                comments.positive.str.push(str);
+                comments.positive.word.push(word);
             }
         }
         for(let word of json_dict['negative']){
             if (str.toUpperCase().includes(word)){
                 scores.negative++;
-                comments.negative.push(str);
+                comments.negative.str.push(str);
+                comments.negative.word.push(word);
             }
         }
         for(let word of json_dict['uncertainty']){
             if (str.toUpperCase().includes(word)){
                 scores.uncertainty++;
-                comments.uncertainty.push(str);
+                comments.uncertainty.str.push(str);
+                comments.uncertainty.word.push(word);
             }
         }
     }
